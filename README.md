@@ -1,1 +1,2 @@
-# game
+# webpack설정
+

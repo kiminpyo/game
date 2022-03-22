@@ -1,92 +1,13 @@
 <html>
   <head>
-    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
+
+    <meta charset="UTF-8">
+    <title>구구단</title>
   </head>
   <body>
     <div id="root"></div>   
-    <script type="text/babel">
-      class GuGuDan extends React.Component {
-    
-     
-         state = {
-            first: Math.ceil(Math.random() * 9),
-            second: Math.ceil(Math.random() * 9),
-            value: '',
-            result: '',
-
-          };
-       
-        onSubmit = (e) => {
-      
-                e.preventDefault();
-                if(parseInt(this.state.value) === this.state.first * this.state.second){
-                  this.setState((prevState) => { 
-                    
-                    return {
-                      result: prevState.value + '정답',
-                      first: Math.ceil(Math.random() * 9),
-                      second: Math.ceil(Math.random() * 9),
-                      value: '',
-                    };                         
-                  });  
-                  //버튼누르고 다시 커서 깜빢거리게 하는 기능 
-                   this.input.focus();           
-                }else {
-                  this.setState((prevState) => {
-                    return {
-                    result: prevState.value + '땡',
-                    value : '',
-                  /* first 랑 second는 안적었으니 안바뀐다. */
-                    }
-                  });
-                 
-                }
-                 //setState==>비동기, 예전 state로 새로운 state를 만들때는 함수를 return해준다.              
-                 /* prevSate의 정보 (실제론 매개변수로 주어지는 것) this.setState((prevState) => {
-                 return {
-                   value: prevState.value + 1,
-                 } ;
-                 }); */
-        };
-        onChangeHandler = (e) => {
-           this.setState({value: e.target.value});
-        };
-        
-        onRefInput = (c) => {
-          this.input = c;
-        }
-        
-        render(){
-          console.log('렌더링');
-          //10초 걸리는 작업일 때는 state하나마다 10초씩 걸린다. ==> 성능 최적화를 위해 중요하다.
-          // 따로 함수로 빼는이유 ==> setState마다 함수가 실행되기때문에 렌더링 
-         /* onchange, onclick, onsubmit, onload, onfocus, onblur */
-         /* <>가 에러가난다 => <React.Fragment>로 감싼다  */
-         return(
-            <>
-              {this.state.first}곱하기 {this.state.second}의 값은? <br/>
-              <form onSubmit={this.onSubmit}>
-                <input ref={this.onRefInput} type="number" value={this.state.value} onChange={this.onChangeHandler}/>
-                <button>입력</button>
-                
-              </form>
-              <div>{this.state.result}</div>       
-            </>
-          );
-        }
-      }
-        
-    </script>
-     <script type="text/babel">
-       
-      ReactDOM.render(
-      
-      <GuGuDan/>, document.querySelector('#root'));
-    </script>
-   
+    <script src="./dist/app.js"></script>
+  
   </body>
  
 </html>
