@@ -1,6 +1,7 @@
 import React, { Component, createRef } from 'react';
 import Try from './Try';
 
+/* this선택자를 안쓰면 함수를 밖에다 뺄수있다. class안에 넣어버리면 다른 곳에 쓰기가 힘들어진다. */
 function getNumbers() { // 숫자 네 개를 겹치지 않고 랜덤하게 뽑는 함수
   const candidate = [1,2,3,4,5,6,7,8,9];
   const array = [];
@@ -23,6 +24,7 @@ class Baseball extends Component {
     const { value, tries, answer } = this.state;
     e.preventDefault();
     if (value === answer.join('')) {
+      /* 함수와 바로의 차이 ==> 자유도가 늘어나면서 예전state를 관리할 수 있다. === 1급 객체(highorder function) */
       this.setState((prevState) => {
         return {
           result: '홈런!',
@@ -30,6 +32,7 @@ class Baseball extends Component {
         }
       });
       alert('게임을 다시 시작합니다!');
+      /* 바로 */
       this.setState({
         value: '',
         answer: getNumbers(),
@@ -77,11 +80,15 @@ class Baseball extends Component {
     });
   };
 
-  inputRef = createRef(); // this.inputRef
-
+    inputRef = createRef();
+    
+    /* 함수로=>  inputRef= () => {
+      this.inputRef =c;
+    } */
   render() {
     const { result, value, tries } = this.state;
     return (
+      //렌더안에서 this.setState를 쓴다? this.setState -> render -> this.setState ->render (무한반복)
       <>
         <h1>{result}</h1>
         <form onSubmit={this.onSubmitForm}>
