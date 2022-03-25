@@ -3,6 +3,7 @@ import React, {useState, useRef } from 'react'
 const ResponseCheck = () => {
   const [state, setState] = useState('waiting');
   const [message, setMessage] = useState('클릭해서 시작');
+  /* reduce는 배열의 요소에 대해 실행되기에 배열로  */
   const [result, setResult] = useState([]);
   
   /* ref의 추가적 기능 + current를 넣는다.
@@ -27,13 +28,13 @@ const ResponseCheck = () => {
       /* 2초에서 3초까지는 대기시간이 있고, 그사이에 ready를 넣어준다.
       비동기 */
       setState('ready')
-     setMessage('초록색이 된 후에 클릭하세요.')
+     setMessage('초록색이 되면 클릭하세요!')
     }
     
     else if (state ==='ready'){ //성급하게 클릭
       clearTimeout(timeOut.current);
       setState('intro');
-      setMessage('초록색이 된 후에 클릭하세요')   
+      setMessage('성급합니다! 초록색이 된 후에 클릭하세요')   
     }
     else if(state ==='intro'){
       setState('waiting')
@@ -59,10 +60,14 @@ const ResponseCheck = () => {
   };
 
   const renderAverage = () =>{
+    //배열의 갯수가 0개면 null, click으로 인해 result가 생길때 배열에 담긴다.
+
     return result.length === 0
     ? null 
     : <>
-      <div>평균시간 : {result.reduce( (a,c ) => a + c)/ result.length}ms</div>
+
+    {/* 배열에 담긴 뒤 length는 실행한 횟수가 되고 reduce를 이용해 클릭시간만큼을 횟수로 나눠야 매 횟수마다의 순간속도를 구한다 */}
+      <div>평균시간 : {result.reduce( (a,c ) => a + c/ result.length) }ms</div>
       <button onClick={onReset}>리셋</button>
     </>
   }
