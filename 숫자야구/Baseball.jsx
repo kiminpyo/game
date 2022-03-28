@@ -96,6 +96,15 @@ class Baseball extends Component {
         </form>
         <div>시도: {tries.length}</div>
         <ul>
+       {/*    즉시실행  {(() => {}) ()} 
+          const array =[];
+          {(() => {
+            for(let i = 0 ;i < tries.length ; i++){
+             array.push( <Try key={`${i + 1}차 시도 :${v.try}`} tryInfo={v} />)   
+            }
+            return array ;
+          }) ()} */}
+
           {tries.map((v, i) => {
             return (
               <Try key={`${i + 1}차 시도 :`} tryInfo={v} />
