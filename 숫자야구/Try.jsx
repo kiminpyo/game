@@ -6,12 +6,12 @@ class Try extends PureComponent {
     constructor(props){
         super(props);
         //다른동작
-        const filtered = this.props.filter(() => {
+      /*   const filtered = this.props.filter(( ) => {
 
-        })
+        }) */
         //원래 동작
         this.state = {
-            result :  
+            result :  this.props.result,
             try: this.props.try
         }
     }
