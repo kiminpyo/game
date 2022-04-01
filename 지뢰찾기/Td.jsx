@@ -1,7 +1,7 @@
-import React, {useCallback, useContext} from 'react'
+import React, {useCallback, useContext, memo} from 'react'
 import {NORMALIZE_CELL,QUESTION_CELL, FLAG_CELL, CLICK_MINE, CODE, OPEN_CELL, TableContext } from './MineSearch'
 
-const getTdStyle = (code) =>{
+const getTdStyle = (code) => {
   switch (code){
   case CODE.NORMAL:
   case CODE.MINE:
@@ -10,11 +10,13 @@ const getTdStyle = (code) =>{
     };
   case CODE.CLICKED_MINE:
   case CODE.OPENED:
+    console.log('hi')
     return{
-      background: 'white'
+      background: 'gray'
     };
     case CODE.QUESTION_MINE:
     case CODE.QUESTION:
+      console.log('hi')
         return{
           background: 'yellow',
         };
@@ -63,7 +65,6 @@ const Td = ({rowIndex, cellIndex}) =>{
     case CODE.OPENED:
     case CODE.FLAG_MINE:
     case CODE.FLAG:
-    
     case CODE.QUESTION_MINE:
     case CODE.QUESTION:
       return;
@@ -74,13 +75,16 @@ const Td = ({rowIndex, cellIndex}) =>{
     case CODE.MINE :
       dispatch({type: CLICK_MINE, row: rowIndex, cellIndex:cellIndex})
       return;
+      default:
+      return;
+  
     }
   },[tableData[rowIndex][cellIndex], halted])
-  const onClickRightTd = useCallback((e) =>{
+  const onRightClickTd = useCallback((e) =>{
+    e.preventDefault();
     if(halted){
       return;
     }
-    e.preventDefault();
     switch(tableData[rowIndex][cellIndex]){
       case CODE.NORMAL:
       case CODE.MINE:
@@ -98,13 +102,24 @@ const Td = ({rowIndex, cellIndex}) =>{
         return;
     }
   },[tableData[rowIndex][cellIndex]], halted)
+  console.log('td rendered')
   return (
-    <td
-    style={getTdStyle(tableData[rowIndex][cellIndex])}
-    onClick={onClickTd}
-    onContextMenu={onClickRightTd}
-    >{getTdText(tableData[rowIndex][cellIndex])}</td>
+    <RealTd 
+    onClickTd={onClickTd} 
+    onRightClickTd={onRightClickTd} 
+    data={tableData[rowIndex][cellIndex]}
+    ></RealTd >
   )
 }
+const RealTd = memo(({ onClickTd, onRightClickTd, data}) => {
+  console.log('real td rendered');
+  return (
+    <td
+      style={getTdStyle(data)}
+      onClick={onClickTd}
+      onContextMenu={onRightClickTd}
+    >{getTdText(data)}</td>
+  )
+});
 
 export default Td
