@@ -35,7 +35,7 @@ export const RESET_GAME = 'RESET_GAME'
                 return{
                     ...state,
                     tableData,
-                    recentCell : [action.row, action.cell],
+                    recentCell : [action.row,action.cell]
                     };
             }
             case SET_TURN: {
@@ -91,7 +91,7 @@ const TicTacToe = memo(() =>{
     }
     /* 무승부 검사 */
     console.log(row,cell, winner,tableData, turn)
-    if (win ){
+    if (win){
         dispatch({type: SET_WINNER, winner: turn})
     }else{
         let all = true; /* 무승부라는 뜻  */

@@ -1,14 +1,18 @@
-import React, {useCallback, useReducer, useState} from 'react'
+import React, {useCallback, useReducer, useState, useEffect} from 'react'
 import Table from './Table'
 
 const initialState = {
   winner: '',
   turn: 'o',
-  tableData : [['','',''],['','',''],['','','']]
+  tableData : [['','',''],['','',''],['','','']],
+  recentCell : [-1,-1],
+  draw: ''
 }
 const SET_WINNER = 'SET_WINNER'
 export const CLICK_CELL = 'CLICK_CELL'
 export const SET_TURN = 'SET_TURN'
+export const RESET_GAME = 'RESET_GAME'
+export const RESET_GAME_DRAW = "RESET_GAME_DRAW"
 const reducer = (state, action) => {
   switch(action.type){
     case SET_WINNER :
@@ -28,7 +32,8 @@ const reducer = (state, action) => {
     return{
       /* state와 바뀐 tableData 반환 */
       ...state,
-      tableData
+      tableData,
+      recentCell : [action.row, action.cell]
       
     };
     case SET_TURN:
@@ -36,21 +41,81 @@ const reducer = (state, action) => {
       return{
         ...state,
         turn: state.turn === 'o' ? 'x' : 'o',
+      };
+    case RESET_GAME:
+
+    return{
+      ...state,
+      tableData: [['','',''],['','',''],['','','']],
+      recentCell: [-1,-1]
+    };
+    case RESET_GAME_DRAW:
+      return{
+        ...state,
+        tableData:  [['','',''],['','',''],['','','']],
+        recentCell: [-1,-1],
+        draw: action.draw
       }
-  }
+    default:
+      return state;
+ 
+    }
 }
 
 
 
 const TicTacToe =() => {
   const [state, dispatch] = useReducer(reducer,initialState);
+  const {tableData, turn, winner, recentCell} = state;
 
   const onClickTable = useCallback(() => {
     /* dispatch안에 action개체({type: 'SET_WINNER', winner: '0'}) => dispatch하면 action을 실행한다
   action을 실행할 수 있게 바꿔주는 것 =>reducer*/
   console.log('실행')
     dispatch({type: SET_WINNER, winner: '0'})
-  },[])
+  },[]);
+
+  useEffect(() =>{
+    const [ row, cell] = recentCell;
+    if( row < 0){
+      return;
+    }
+      let win = false;
+      if(tableData[row][0] === turn && tableData[row][1] && tableData[row][2] === turn){
+        win = true;
+        console.log('hi')
+      }if(tableData[0][cell] === turn && tableData[1][cell] === turn && tableData[2][cell] ===turn ){
+        win = true;
+        console.log('hi')
+      }if(tableData[0][0] === turn && tableData[1][1] === turn && tableData[2][2] === turn ){
+        win = true;
+        console.log('hi')
+      }if(tableData[0][2] ===turn && tableData[1][1] === turn && tableData[2][0] ===turn){
+        win = true;
+        console.log('hi')
+      }
+      console.log(win,row,cell, tableData)
+      if(win){
+        dispatch({type: SET_WINNER, winner: turn})
+        dispatch({type: RESET_GAME})
+      }else{
+        let all = true; //all이 true면 무승부
+        tableData.forEach((row) => { //무승부 검사
+          row.forEach((cell) =>{
+            if(!cell){
+              all = false;
+            }
+          })
+        })
+        if(all){
+          dispatch({type: RESET_GAME_DRAW, draw: '비겼습니다.'})
+        }else{
+          dispatch({type: SET_TURN})
+        }
+   
+      }
+  }, [recentCell])
+
     return (
   <>
     <Table
@@ -58,6 +123,7 @@ const TicTacToe =() => {
     tableData={state.tableData} 
     dispatch={dispatch}/>
     {state.winner && <div>{state.winner}님의 승리</div>}
+    {state.draw     && <div>{state.draw}</div>}
   </>
   )
 }
